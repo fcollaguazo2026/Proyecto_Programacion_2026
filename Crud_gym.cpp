@@ -73,6 +73,12 @@ void registrar_Miembro(vector <Miembro>& miembros){
     getline(cin,m.nombre);
     cout<<"Ingrese la edad: ";
     cin>>m.edad;
+    while(m.edad<=0){
+        cout<<"Debe ser mayor que 0"<<endl;
+        cout<<"Ingrese la edad: ";
+        cin>>m.edad;
+        break;
+    }
     cin.ignore(),
     cout<<"-----Plan-----"<<endl;
     cout<<"1.- Basico"<<endl;
@@ -95,10 +101,61 @@ void registrar_Miembro(vector <Miembro>& miembros){
         archivo<<m<<endl;
         archivo.close();
         cout<<"Miembro Registrado correctamente"<<endl;
+        
     }else{
         cout<<"No se pudo abrir el archivo"<<endl;
     }
 
+}
+
+void mostrar_Miembros(vector <Miembro> miembros){
+    ifstream archivo(gym);
+
+    Miembro m;
+    cout<<" ---- Lista De Miembros ----"<<endl;
+    if(archivo.is_open()){
+        while (archivo>>m){
+            cout<<"ID: "<<m.id<<endl;
+            cout<<"Nombre: "<<m.nombre<<endl;
+            cout<<"Edad: "<<m.edad<<endl;
+            cout<<"Plan: "<<m.plan<<endl;
+            cout<<"Duracion: "<<m.duracion<<endl;
+            cout<<"Fecha de Inscripcion: "<<m.fecha_inscripcion<<endl;
+            cout<<"---------------------------"<<endl;
+        }
+        archivo.close();
+    }else{
+        cout<<"No se pudo abrir el archivo"<<endl;
+    }
+}
+
+void buscar_miemmbro(vector <Miembro> miembros){
+    ifstream archivo(gym);
+    int id;
+    Miembro m;
+    bool encontrar=false;
+    cout<<"Ingrese el id del miembro: ";
+    cin>>id;
+    if(archivo.is_open()){
+        while (archivo>>m){
+            if(m.id==id){
+                encontrar=true;
+                cout<<"Nombre: "<<m.nombre<<endl;
+                cout<<"Edad: "<<m.edad<<endl;
+                cout<<"Plan: "<<m.plan<<endl;
+                cout<<"Duracion: "<<m.duracion<<endl;
+                cout<<"Fecha de Inscripcion: "<<m.fecha_inscripcion<<endl;
+                cout<<"---------------------------"<<endl;
+                break;
+            }
+        }
+        if(!encontrar){
+            cout<<"ID incorrecto"<<endl;
+        }
+        archivo.close();
+    }else{
+        cout<<"No se pudo abrir el archvio"<<endl; // creo que esto de is open esta demas
+    }
 }
 
 
@@ -115,77 +172,85 @@ int main(){
         cout<<"Ingrese la opcion: ";
         cin>>opcion;
         string usuario="admin";
-        int contrasenia=1234;
+        string contrasenia="1234";
         string usu;
-        int con;
+        string con;
+        int contador=0;
+        int op=0;
+        int op1=0;
         switch (opcion){
         case 1:
-            int op;
             cin.ignore();
             cout<<"Ingrese el usuario: ";
             getline(cin,usu);
-            cout<<"Ingrese la contraseña: ",
-            cin>>con;
-
-            if(usuario==usu && contrasenia==con){
-                cout<<"===== Aministrador ======"<<endl;
-                cout<<"1.- Registrar miembro"<<endl;
-                cout<<"2.- Mostrar miembro"<<endl;
-                cout<<"3.- Buscar miembro"<<endl;
-                cout<<"4.- Actualizar miembro"<<endl;
-                cout<<"5.- Eliminar miembro"<<endl;
-                cout<<"6.- Salir"<<endl;
-                cout<<"Ingrese una opcion: ";
-                cin>>op;
+            cout<<"Ingrese la contraseña: ";
+            getline(cin,con);
+            do{
+                if(usuario==usu && contrasenia==con){
+                    cout<<"===== Aministrador ======"<<endl;
+                    cout<<"1.- Registrar miembro"<<endl;
+                    cout<<"2.- Mostrar miembro"<<endl;
+                    cout<<"3.- Buscar miembro"<<endl;
+                    cout<<"4.- Actualizar miembro"<<endl;
+                    cout<<"5.- Eliminar miembro"<<endl;
+                    cout<<"6.- Salir"<<endl;
+                    cout<<"Ingrese una opcion: ";
+                    cin>>op;
             
-                switch (op){
-                case 1:
-                    registrar_Miembro(miembros);
+                    switch (op){
+                    case 1:
+                        registrar_Miembro(miembros);
+                        break;
+                    case 2:
+                        mostrar_Miembros(miembros);
+                        break;
+                    case 3:
+                        buscar_miemmbro(miembros);
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        cout<<"Saliendo....."<<endl;
+                        break;
+                    default:
+                        cout<<"Opcion Invalida"<<endl;
+                        break;
+                    }
+                }else{
+                    cout<<"Usuario o Contrasenia Incorrecta"<<endl;
+                }
+            }while(op !=6);
+            break;
+        case 2:
+            do{
+                cout<<"===== Usuario ====="<<endl;
+                cout<<"1.- Mostrar miembros"<<endl;
+                cout<<"2.- Buscar miembro"<<endl;
+                cout<<"3.- Salir"<<endl;
+                cout<<"Ingrese una opcion: ";
+                cin>>op1;
+                switch (op1){
+                    case 1:
+                    mostrar_Miembros(miembros);
                     break;
                 case 2:
+                    buscar_miemmbro(miembros);
                     break;
                 case 3:
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    break;
-                case 6:
-                    cout<<"Saliendo....."<<endl;
+                    cout<<"Saliendo...."<<endl;
                     break;
                 default:
                     cout<<"Opcion Invalida"<<endl;
                     break;
                 }
-            }else{
-                cout<<"Usuario o Contrasenia Incorrecta"<<endl;
-            }
+            }while(op1 !=3);
             break;
-        case 2:
-            int op1;
-            cout<<"===== Usuario ====="<<endl;
-            cout<<"1.- Mostrar miembros"<<endl;
-            cout<<"2.- Buscar miembro"<<endl;
-            cout<<"3.- Salir"<<endl;
-            cout<<"Ingrese una opcion: ";
-            cin>>opcion;
-            break;
-            switch (op1){
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                cout<<"Saliendo...."<<endl;
-                break;
-            default:
-                cout<<"Opcion Invalida"<<endl;
-                break;
-            }
         default:
+            cout<<"Opcion Invalida"<<endl;
             break;
         }
-
     }while(opcion !=3);
     return 0;
 }
