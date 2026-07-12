@@ -1,2 +1,2 @@
-123;Fabian Collaguazo;20;Basico;Anual;09-07-2026
-555;Jair Toapanta;21;VIP;Mensual;10-07-2026
+123;Fabian Collaguazo;21;Premium;Mensual;12-07-2026
+999;Marial belen;9;basico;mensaula;22-05-2005

@@ -158,6 +158,62 @@ void buscar_miemmbro(vector <Miembro> miembros){
     }
 }
 
+void actualizar_Miembro(vector <Miembro>& miembros){
+    leer_Archivo(miembros);
+
+    int co;
+    bool encontrar=false;
+    cout<<"Ingrese el id de miembro: ";
+    cin>>co;
+
+    for(int i=0;i<miembros.size();i++){
+        if(miembros[i].id==co){
+            encontrar=true;
+            cin.ignore();
+            cout<<"Nuevo nombre: ";
+            getline(cin,miembros[i].nombre);
+            cout<<"Nueva edad: ";
+            cin>>miembros[i].edad;
+            cin.ignore();
+            cout<<"Nuevo plan: ";
+            getline(cin,miembros[i].plan);
+            cout<<"Nueva duracion: ";
+            getline(cin,miembros[i].duracion);
+            cout<<"Nueva fecha de inscripcion: ";
+            getline(cin,miembros[i].fecha_inscripcion);
+        }
+    }
+    if(encontrar){
+        guardar_archivo(miembros);
+        cout<<"Miembro actualizado Correctamente"<<endl;
+    }else{
+        cout<<"No se encontro al miembro"<<endl;
+    }
+}
+
+void elimiar_Miembro(vector <Miembro>& miembros){
+    int co;
+    bool encontrado=false;
+
+    leer_Archivo(miembros);
+    cout<<"Ingrese el codigo a eliminar: ";
+    cin>>co;
+
+    for(size_t i=0;i<miembros.size();i++){
+        if(miembros[i].id==co){
+            miembros.erase(miembros.begin()+i);
+            encontrado=true;
+            break;
+        }
+    }
+    if(encontrado){
+        guardar_archivo(miembros);
+        cout<<"Miembro eliminado correctamente"<<endl;
+    }else{
+        cout<<"No se encontro el libro"<<endl;
+    }
+
+}
 
 
 int main(){
@@ -208,8 +264,10 @@ int main(){
                         buscar_miemmbro(miembros);
                         break;
                     case 4:
+                        actualizar_Miembro(miembros);
                         break;
                     case 5:
+                        elimiar_Miembro(miembros);
                         break;
                     case 6:
                         cout<<"Saliendo....."<<endl;
