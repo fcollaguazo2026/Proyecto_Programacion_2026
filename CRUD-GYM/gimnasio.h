@@ -10,6 +10,7 @@ struct Cliente
     int edad;
     QString plan;
     QString fecha;
+    QString duracion;
 };
 
 #endif // GIMNASIO_H

@@ -21,8 +21,9 @@ private slots:
     void guardarCliente();
     void editarCliente();
     void eliminarCliente();
-    void buscarCliente();
+    void filtrarClientes();
     void limpiarFormulario();
+    void mostrarClientes();
     void seleccionarCliente(int fila, int columna);
 
 private:

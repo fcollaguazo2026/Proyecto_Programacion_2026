@@ -20,59 +20,24 @@
       <property name="font">
        <font>
         <pointsize>16</pointsize>
-        <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
       <property name="text">
-       <string>GESTIÓN DE CLIENTES - GIMNASIO</string>
+       <string>🏋 EPN GYM MANAGER🏋
+Sistema de Gestión de Clientes</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
      </widget>
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="labelId">
+      <item row="2" column="2">
+       <widget class="QLabel" name="labelDuracion">
         <property name="text">
-         <string>ID:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="txtId">
-        <property name="placeholderText">
-         <string>Ej: 1</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="labelNombre">
-        <property name="text">
-         <string>Nombre:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLineEdit" name="txtNombre">
-        <property name="placeholderText">
-         <string>Ej: Carlos Pérez</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="labelEdad">
-        <property name="text">
-         <string>Edad:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="txtEdad">
-        <property name="placeholderText">
-         <string>Ej: 30</string>
+         <string>Duracion:</string>
         </property>
        </widget>
       </item>
@@ -83,33 +48,11 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QComboBox" name="cmbPlan">
-        <item>
-         <property name="text">
-          <string>Seleccione un plan</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Normal</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>VIP</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Business</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Socio</string>
-         </property>
-        </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="txtEdad">
+        <property name="placeholderText">
+         <string>Ej: 30</string>
+        </property>
        </widget>
       </item>
       <item row="2" column="0">
@@ -119,10 +62,93 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1" colspan="3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelId">
+        <property name="text">
+         <string>ID:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelEdad">
+        <property name="text">
+         <string>Edad:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QComboBox" name="cmbPlan">
+        <item>
+         <property name="text">
+          <string>Seleccione un plan</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Basico</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Premium</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>VIP</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLineEdit" name="txtNombre">
+        <property name="placeholderText">
+         <string>Ej: Carlos Pérez</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
        <widget class="QLineEdit" name="txtFecha">
         <property name="placeholderText">
          <string>DD/MM/AAAA</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="4">
+       <widget class="QComboBox" name="cmbDuracion">
+        <item>
+         <property name="text">
+          <string>Seleccione la duracion:</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Mensual</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Trimestral</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Anual</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="labelNombre">
+        <property name="text">
+         <string>Nombre:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="txtId">
+        <property name="placeholderText">
+         <string>Ej: 1</string>
         </property>
        </widget>
       </item>
@@ -145,16 +171,50 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="btnEliminar">
-        <property name="text">
-         <string>Eliminar</string>
-        </property>
+       <widget class="QComboBox" name="cmbBuscar">
+        <item>
+         <property name="text">
+          <string>Seleccione:</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ID</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Plan</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Fecha</string>
+         </property>
+        </item>
        </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txtBuscar"/>
       </item>
       <item>
        <widget class="QPushButton" name="btnBuscar">
         <property name="text">
          <string>Buscar</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnMostrar">
+        <property name="text">
+         <string>Mostrar Todo</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnEliminar">
+        <property name="text">
+         <string>Eliminar</string>
         </property>
        </widget>
       </item>
@@ -170,7 +230,7 @@
     <item>
      <widget class="QTableWidget" name="tblClientes">
       <property name="columnCount">
-       <number>5</number>
+       <number>6</number>
       </property>
       <attribute name="horizontalHeaderVisible">
        <bool>true</bool>
@@ -196,6 +256,11 @@
       <column>
        <property name="text">
         <string>Plan</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Duracion</string>
        </property>
       </column>
       <column>

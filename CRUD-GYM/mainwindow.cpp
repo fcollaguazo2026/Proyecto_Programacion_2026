@@ -7,6 +7,7 @@
 #include <QTextStream>
 #include <QDir>
 #include <QIntValidator>
+#include <QDebug>
 #include <QRegularExpressionValidator>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -38,9 +39,117 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnGuardar, &QPushButton::clicked, this, &MainWindow::guardarCliente);
     connect(ui->btnEditar, &QPushButton::clicked, this, &MainWindow::editarCliente);
     connect(ui->btnEliminar, &QPushButton::clicked, this, &MainWindow::eliminarCliente);
-    connect(ui->btnBuscar, &QPushButton::clicked, this, &MainWindow::buscarCliente);
+    connect(ui->btnBuscar, &QPushButton::clicked, this, &MainWindow::filtrarClientes);
+    connect(ui->btnMostrar, &QPushButton::clicked, this, &MainWindow::mostrarClientes);
     connect(ui->btnLimpiar, &QPushButton::clicked, this, &MainWindow::limpiarFormulario);
     connect(ui->tblClientes, &QTableWidget::cellClicked, this, &MainWindow::seleccionarCliente);
+    // Colores para los botones
+    ui->btnGuardar->setStyleSheet(
+        "QPushButton {"
+        "background-color: #28a745;"
+        "color: white;"
+        "font-weight: bold;"
+        "border-radius: 5px;"
+        "padding: 5px;"
+        "}"
+        );
+
+    ui->btnEditar->setStyleSheet(
+        "QPushButton {"
+        "background-color: #007bff;"
+        "color: white;"
+        "font-weight: bold;"
+        "border-radius: 5px;"
+        "padding: 5px;"
+        "}"
+        );
+
+    ui->cmbBuscar->setStyleSheet(
+        "QPushButton {"
+        "background-color: #fd7e14;"
+        "color: white;"
+        "font-weight: bold;"
+        "border-radius: 5px;"
+        "padding: 5px;"
+        "}"
+        );
+
+    ui->btnEliminar->setStyleSheet(
+        "QPushButton {"
+        "background-color: #dc3545;"
+        "color: white;"
+        "font-weight: bold;"
+        "border-radius: 5px;"
+        "padding: 5px;"
+        "}"
+        );
+
+    ui->btnBuscar->setStyleSheet(
+        "QPushButton {"
+        "background-color: yellow;"
+        "color: black;"
+        "font-weight: bold;"
+        "border-radius: 5px;"
+        "padding: 5px;"
+        "}"
+        );
+
+    ui->btnMostrar->setStyleSheet(
+        "QPushButton {"
+        "background-color: tomato;"
+        "color: white;"
+        "font-weight: bold;"
+        "border-radius: 5px;"
+        "padding: 5px;"
+        "}"
+        );
+    ui->btnLimpiar->setStyleSheet(
+        "QPushButton {"
+        "background-color: #6c757d;"
+        "color: white;"
+        "font-weight: bold;"
+        "border-radius: 5px;"
+        "padding: 5px;"
+        "}"
+        );
+
+    // Modo oscuro
+
+    qApp->setStyleSheet(
+        "QMainWindow {"
+        "background-color: #202124;"
+        "color: white;"
+        "}"
+
+        "QLabel {"
+        "color: white;"
+        "}"
+
+        "QLineEdit, QComboBox {"
+        "background-color: #2d2d2d;"
+        "color: white;"
+        "border: 1px solid #555;"
+        "padding: 4px;"
+        "}"
+
+        "QTableWidget {"
+        "background-color: #2d2d2d;"
+        "color: white;"
+        "gridline-color: #555;"
+        "}"
+
+        "QHeaderView::section {"
+        "background-color: #444;"
+        "color: white;"
+        "}"
+        "QMessageBox QLabel {"
+        "color: black;"
+        "}"
+
+        "QMessageBox QPushButton {"
+        "color: black;"
+        "}"
+        );
 
     // Cargar datos al iniciar
     cargarClientesDesdeArchivo();
@@ -71,10 +180,16 @@ bool MainWindow::validarFormulario()
         ui->txtEdad->setFocus();
         return false;
     }
+
     if (ui->cmbPlan->currentIndex() == 0) {
         QMessageBox::warning(this, "Campo obligatorio", "Seleccione un plan.");
         return false;
     }
+    if (ui->cmbDuracion->currentIndex() == 0) {
+        QMessageBox::warning(this, "Campo obligatorio", "Seleccione una duracion.");
+        return false;
+    }
+
     if (ui->txtFecha->text().trimmed().isEmpty()) {
         QMessageBox::warning(this, "Campo obligatorio", "Ingrese la fecha de inscripción (DD/MM/AAAA).");
         ui->txtFecha->setFocus();
@@ -112,7 +227,9 @@ void MainWindow::guardarCliente()
     cliente.nombre = ui->txtNombre->text().trimmed();
     cliente.edad = ui->txtEdad->text().toInt();
     cliente.plan = ui->cmbPlan->currentText();
+    cliente.duracion = ui->cmbDuracion->currentText();
     cliente.fecha = ui->txtFecha->text().trimmed();
+
 
     clientes.append(cliente);
     guardarClientesEnArchivo();
@@ -133,7 +250,8 @@ void MainWindow::actualizarTabla()
         ui->tblClientes->setItem(fila, 1, new QTableWidgetItem(c.nombre));
         ui->tblClientes->setItem(fila, 2, new QTableWidgetItem(QString::number(c.edad)));
         ui->tblClientes->setItem(fila, 3, new QTableWidgetItem(c.plan));
-        ui->tblClientes->setItem(fila, 4, new QTableWidgetItem(c.fecha));
+        ui->tblClientes->setItem(fila, 4, new QTableWidgetItem(c.duracion));
+        ui->tblClientes->setItem(fila, 5, new QTableWidgetItem(c.fecha));
     }
 }
 
@@ -152,6 +270,7 @@ void MainWindow::seleccionarCliente(int fila, int columna)
     ui->txtNombre->setText(c.nombre);
     ui->txtEdad->setText(QString::number(c.edad));
     ui->cmbPlan->setCurrentText(c.plan);
+    ui->cmbDuracion->setCurrentText(c.duracion);
     ui->txtFecha->setText(c.fecha);
 
     ui->btnGuardar->setEnabled(false);
@@ -163,32 +282,36 @@ void MainWindow::seleccionarCliente(int fila, int columna)
 // Editar cliente
 void MainWindow::editarCliente()
 {
-    if (indiceSeleccionado == -1) {
-        QMessageBox::warning(this, "Sin selección", "Seleccione un cliente de la tabla.");
-        return;
-    }
     if (!validarFormulario())
         return;
 
-    int nuevoId = ui->txtId->text().toInt();
-    int indiceExistente = buscarIndicePorId(nuevoId);
-    if (indiceExistente != -1 && indiceExistente != indiceSeleccionado) {
-        QMessageBox::warning(this, "ID duplicado", "Ya existe otro cliente con ese ID.");
+    int idOriginal = ui->txtId->text().toInt();
+
+    int indice = buscarIndicePorId(idOriginal);
+
+    if (indice == -1) {
+        QMessageBox::warning(this,
+                             "Error",
+                             "No se encontró el cliente a editar.");
         return;
     }
 
-    Cliente &c = clientes[indiceSeleccionado];
-    c.id = nuevoId;
+    Cliente &c = clientes[indice];
+
+    c.id = ui->txtId->text().toInt();
     c.nombre = ui->txtNombre->text().trimmed();
     c.edad = ui->txtEdad->text().toInt();
     c.plan = ui->cmbPlan->currentText();
+    c.duracion = ui->cmbDuracion->currentText();
     c.fecha = ui->txtFecha->text().trimmed();
 
     guardarClientesEnArchivo();
     actualizarTabla();
     limpiarFormulario();
 
-    QMessageBox::information(this, "Cliente actualizado", "El cliente se actualizó correctamente.");
+    QMessageBox::information(this,
+                             "Cliente actualizado",
+                             "El cliente se actualizó correctamente.");
 }
 
 // ------------------------------------------------------------
@@ -214,44 +337,234 @@ void MainWindow::eliminarCliente()
 }
 
 // ------------------------------------------------------------
-// Buscar cliente por ID
-void MainWindow::buscarCliente()
+// Filtrar Miembros
+void MainWindow::filtrarClientes()
 {
-    if (ui->txtId->text().trimmed().isEmpty()) {
-        QMessageBox::warning(this, "ID requerido", "Ingrese el ID a buscar.");
+    QString texto = ui->txtBuscar->text().trimmed();
+
+    if (texto.isEmpty()) {
+        QMessageBox::warning(this,
+                             "Dato requerido",
+                             "Ingrese un dato para buscar.");
         return;
     }
 
-    int id = ui->txtId->text().toInt();
-    int indice = buscarIndicePorId(id);
-    if (indice == -1) {
-        QMessageBox::information(this, "No encontrado", "No existe un cliente con ese ID.");
-        return;
+
+    QString tipo = ui->cmbBuscar->currentText();
+
+
+
+    // =========================
+    // BUSCAR POR ID
+    // =========================
+    if(tipo.compare("ID", Qt::CaseInsensitive) == 0)
+    {
+        int id = texto.toInt();
+
+        int indice = buscarIndicePorId(id);
+
+
+        if(indice == -1)
+        {
+            QMessageBox::information(this,
+                                     "No encontrado",
+                                     "No existe un cliente con ese ID.");
+            return;
+        }
+
+
+        indiceSeleccionado = indice;
+
+        const Cliente &c = clientes[indice];
+
+
+        // Mostrar datos en formulario
+        ui->txtId->setText(QString::number(c.id));
+        ui->txtNombre->setText(c.nombre);
+        ui->txtEdad->setText(QString::number(c.edad));
+        ui->cmbPlan->setCurrentText(c.plan);
+        ui->cmbDuracion->setCurrentText(c.duracion);
+        ui->txtFecha->setText(c.fecha);
+
+
+
+        // Mostrar en tabla
+        ui->tblClientes->setRowCount(1);
+
+
+        ui->tblClientes->setItem(0,0,
+                                 new QTableWidgetItem(QString::number(c.id)));
+
+        ui->tblClientes->setItem(0,1,
+                                 new QTableWidgetItem(c.nombre));
+
+        ui->tblClientes->setItem(0,2,
+                                 new QTableWidgetItem(QString::number(c.edad)));
+
+        ui->tblClientes->setItem(0,3,
+                                 new QTableWidgetItem(c.plan));
+
+        ui->tblClientes->setItem(0,4,
+                                 new QTableWidgetItem(c.duracion));
+
+        ui->tblClientes->setItem(0,5,
+                                 new QTableWidgetItem(c.fecha));
+
+
+        ui->tblClientes->selectRow(0);
     }
 
-    indiceSeleccionado = indice;
-    const Cliente &c = clientes[indice];
-    ui->txtNombre->setText(c.nombre);
-    ui->txtEdad->setText(QString::number(c.edad));
-    ui->cmbPlan->setCurrentText(c.plan);
-    ui->txtFecha->setText(c.fecha);
-    ui->tblClientes->selectRow(indice);
 
+
+    // =========================
+    // BUSCAR POR PLAN
+    // =========================
+    else if(tipo.compare("Plan", Qt::CaseInsensitive) == 0)
+    {
+
+        ui->tblClientes->setRowCount(0);
+
+        int fila = 0;
+
+
+        for(const Cliente &c : clientes)
+        {
+            if(c.plan.compare(texto, Qt::CaseInsensitive) == 0)
+            {
+
+                ui->tblClientes->insertRow(fila);
+
+
+                ui->tblClientes->setItem(fila,0,
+                                         new QTableWidgetItem(QString::number(c.id)));
+
+                ui->tblClientes->setItem(fila,1,
+                                         new QTableWidgetItem(c.nombre));
+
+                ui->tblClientes->setItem(fila,2,
+                                         new QTableWidgetItem(QString::number(c.edad)));
+
+                ui->tblClientes->setItem(fila,3,
+                                         new QTableWidgetItem(c.plan));
+
+                ui->tblClientes->setItem(fila,4,
+                                         new QTableWidgetItem(c.duracion));
+
+                ui->tblClientes->setItem(fila,5,
+                                         new QTableWidgetItem(c.fecha));
+
+
+                fila++;
+            }
+        }
+
+
+        if(fila == 0)
+        {
+            QMessageBox::information(this,
+                                     "No encontrado",
+                                     "No existen clientes con ese plan.");
+        }
+    }
+
+
+
+    // =========================
+    // BUSCAR POR FECHA
+    // =========================
+    else if(tipo.compare("Fecha", Qt::CaseInsensitive) == 0)
+    {
+
+        ui->tblClientes->setRowCount(0);
+
+        int fila = 0;
+
+
+        for(const Cliente &c : clientes)
+        {
+            if(c.fecha.compare(texto, Qt::CaseInsensitive) == 0)
+            {
+
+                ui->tblClientes->insertRow(fila);
+
+
+                ui->tblClientes->setItem(fila,0,
+                                         new QTableWidgetItem(QString::number(c.id)));
+
+                ui->tblClientes->setItem(fila,1,
+                                         new QTableWidgetItem(c.nombre));
+
+                ui->tblClientes->setItem(fila,2,
+                                         new QTableWidgetItem(QString::number(c.edad)));
+
+                ui->tblClientes->setItem(fila,3,
+                                         new QTableWidgetItem(c.plan));
+
+                ui->tblClientes->setItem(fila,4,
+                                         new QTableWidgetItem(c.duracion));
+
+                ui->tblClientes->setItem(fila,5,
+                                         new QTableWidgetItem(c.fecha));
+
+
+                fila++;
+            }
+        }
+
+
+        if(fila == 0)
+        {
+            QMessageBox::information(this,
+                                     "No encontrado",
+                                     "No existen clientes con esa fecha.");
+        }
+    }
+
+
+
+    else
+    {
+        QMessageBox::warning(this,
+                             "Error",
+                             "Seleccione un tipo de búsqueda.");
+    }
+
+
+
+    // Cambiar botones
     ui->btnGuardar->setEnabled(false);
     ui->btnEditar->setEnabled(true);
     ui->btnEliminar->setEnabled(true);
-
-    QMessageBox::information(this, "Cliente encontrado", "El cliente se encontró correctamente.");
 }
-
-// ------------------------------------------------------------
-// Limpiar formulario y resetear estados
-void MainWindow::limpiarFormulario()
+// Mostrar todos los miembros registrados
+void MainWindow::mostrarClientes()
 {
+    // Mostrar nuevamente todos los clientes registrados
+    actualizarTabla();
+
+    // Limpiar campo de búsqueda
+    ui->txtBuscar->clear();
+
+    // Reiniciar el ComboBox de búsqueda
+    ui->cmbBuscar->setCurrentIndex(0);
+
+    // Quitar selección de la tabla
+    ui->tblClientes->clearSelection();
+
+    // Reiniciar botones
+    ui->btnGuardar->setEnabled(true);
+    ui->btnEditar->setEnabled(false);
+    ui->btnEliminar->setEnabled(false);
+
+    indiceSeleccionado = -1;
+}
+// Limpiar Formulario
+void MainWindow::limpiarFormulario() {
     ui->txtId->clear();
     ui->txtNombre->clear();
     ui->txtEdad->clear();
     ui->cmbPlan->setCurrentIndex(0);
+    ui->cmbDuracion->setCurrentIndex(0);
     ui->txtFecha->clear();
     ui->tblClientes->clearSelection();
     indiceSeleccionado = -1;
@@ -275,7 +588,7 @@ void MainWindow::guardarClientesEnArchivo()
     QTextStream salida(&archivo);
     for (const Cliente &c : clientes) {
         salida << c.id << ";" << c.nombre << ";" << c.edad << ";"
-               << c.plan << ";" << c.fecha << "\n";
+               << c.plan << ";"<<c.duracion<<";" << c.fecha << "\n";
     }
     archivo.close();
 }
@@ -301,7 +614,7 @@ void MainWindow::cargarClientesDesdeArchivo()
         if (linea.trimmed().isEmpty())
             continue;
         QStringList datos = linea.split(";");
-        if (datos.size() != 5)
+        if (datos.size() != 6)
             continue;
 
         Cliente c;
@@ -309,7 +622,8 @@ void MainWindow::cargarClientesDesdeArchivo()
         c.nombre = datos[1];
         c.edad = datos[2].toInt();
         c.plan = datos[3];
-        c.fecha = datos[4];
+        c.duracion=datos[4];
+        c.fecha = datos[5];
         clientes.append(c);
     }
     archivo.close();
