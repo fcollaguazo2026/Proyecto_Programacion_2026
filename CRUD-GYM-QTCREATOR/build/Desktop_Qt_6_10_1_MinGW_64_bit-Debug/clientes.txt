@@ -1,0 +1,5 @@
+233;Fabian Collaguazo;21;Basico;Anual;22/07/2026
+123;Andrea Gomez;21;Basico;Trimestral;22/07/2026
+222;Juan Carlos;30;VIP;Anual;23/12/2025
+999;Antonio Collaguazo;20;Premium;Trimestral;21/07/2026
+555;Vcitoria Collaguazo;32;Basico;Trimestral;22/07/2026
