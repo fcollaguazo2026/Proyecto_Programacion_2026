@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-76e83e3a6bbb7d84d3cc.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "CRUD-GYM",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CRUD-GYM::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CRUD-GYM-Debug-e108b9944072a35d6b15.json",
+					"name" : "CRUD-GYM",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CRUD-GYM_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CRUD-GYM_autogen-Debug-92f87db6d9c22cc616e0.json",
+					"name" : "CRUD-GYM_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CRUD-GYM_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CRUD-GYM_autogen_timestamp_deps-Debug-90c0b40065a1dc60eaff.json",
+					"name" : "CRUD-GYM_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/PROGRAMACION DS/Desktop/Proyecto_Presentar hoy/Proyecto_Programacion_2026/CRUD-GYM-QTCREATOR/build/Desktop_Qt_6_10_2_MinGW_64_bit-Debug",
+		"source" : "C:/Users/PROGRAMACION DS/Desktop/Proyecto_Presentar hoy/Proyecto_Programacion_2026/CRUD-GYM-QTCREATOR"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
